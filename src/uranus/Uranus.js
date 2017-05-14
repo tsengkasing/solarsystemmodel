@@ -1,5 +1,5 @@
 /**
- * Created by Think on 2017/5/13.
+ * Created by Think on 2017/5/14.
  */
 import React from 'react';
 import {Sphere, Group} from 'react-whs';
@@ -8,33 +8,33 @@ import * as THREE from 'three';
 
 import Constants from '../Constants';
 
-export default class Venus extends React.Component {
+export default class Uranus extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            venus: null,
-            group: null,
+            uranus: null,
+            group: null
         }
     }
 
     loop = new WHS.Loop(() => {
         if(!this.props.loop) return;
         // eslint-disable-next-line
-        this.state.venus.rotation.y += Constants.ROTATION_SCALE / Constants.VENUS.period;
+        this.state.uranus.rotation.y += Constants.ROTATION_SCALE / Constants.URANUS.period;
 
         // eslint-disable-next-line
-        this.state.venus.data.angle -= Constants.VENUS.velocity;
+        this.state.uranus.data.angle -= Constants.URANUS.velocity;
 
         // eslint-disable-next-line
-        this.state.venus.position.x = Math.cos(this.state.venus.data.angle) * Constants.VENUS.orbit_radius;
+        this.state.uranus.position.x = Math.cos(this.state.uranus.data.angle) * Constants.URANUS.orbit_radius;
         // eslint-disable-next-line
-        this.state.venus.position.z = Math.sin(this.state.venus.data.angle) * Constants.VENUS.orbit_radius;
+        this.state.uranus.position.z = Math.sin(this.state.uranus.data.angle) * Constants.URANUS.orbit_radius;
     });
 
     componentDidMount() {
         // eslint-disable-next-line
-        this.state.group.rotation.z = Constants.VENUS.inclination;
+        this.state.group.rotation.z = Constants.URANUS.inclination;
         this.state.group.addTo(this.props.parent);
         this.props.parent.addLoop(this.loop);
         this.loop.start();
@@ -50,21 +50,21 @@ export default class Venus extends React.Component {
             >
                 <Sphere
                     geometry={{
-                        radius: Constants.VENUS.model_diam / 2,
+                        radius: Constants.URANUS.model_diam / 2,
                         detail: 2
                     }}
                     material={new THREE.MeshStandardMaterial({
-                        color: Constants.VENUS.color,
+                        color: Constants.URANUS.color,
                         shading: THREE.FlatShading,
                         roughness: 0.8,
                         emissive: 0x270000
                     })}
-                    position={[Constants.VENUS.orbit_radius, 0, 0]}
+                    position={[Constants.URANUS.orbit_radius, 0, 0]}
                     refComponent={component => {
                         // eslint-disable-next-line
-                        this.state.venus = component;
+                        this.state.uranus = component;
                         // eslint-disable-next-line
-                        this.state.venus.data = {
+                        this.state.uranus.data = {
                             angle: Math.random() * Math.PI * 2
                         };
 

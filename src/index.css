@@ -1,6 +1,15 @@
 body {
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
-  overflow: hidden;
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    overflow: hidden;
+}
+
+.controls {
+    background-color: white;
+    width: 128px;
+    z-index: 999;
+    position: fixed;
+    top: 0;
+    left: 0;
 }

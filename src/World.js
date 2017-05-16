@@ -100,11 +100,32 @@ class World extends React.Component {
         // eslint-disable-next-line
         this.state.sun.rotation.y += Constants.ROTATION_SCALE / Constants.SUN.period;
 
-        this.state.view.camera.position = this.refs.earth.state.earth.position;
+        this.updateCamera();
 
-        this.angle -= 0.5 * Math.PI / 180;
-        this.state.view.camera._native.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), this.angle);
     });
+
+    updateCamera = () => {
+        if(this.props.view === 'overall') { return; }
+
+        let position = this.refs[this.props.view].state[this.props.view].position;
+        this.state.view.camera.position = position;
+        this.state.view.camera._native.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), this.angle);
+
+        switch (this.props.view) {
+            case 'earth':
+                this.angle -= 0.5 * Math.PI / 180;
+                break;
+            case 'mars':
+                this.angle -= 0.5 * Math.PI / 180;
+                break;
+            case 'saturn':
+                this.angle -= 0.5 * Math.PI / 180;
+                break;
+
+            default:
+        }
+
+    };
 
     criterion = () => {
         window.__s = new WHS.Sphere({ // Create sphere comonent.
@@ -162,6 +183,16 @@ class World extends React.Component {
 
         this.state.world.add(orbit);
     };
+
+    componentWillReceiveProps(props) {
+        // if(props && props.view) {
+        //     if(props.view === 'overall') {
+        //         this.loop.stop();
+        //     }else {
+        //         this.loop.start();
+        //     }
+        // }
+    }
 
     componentDidMount() {
 
@@ -316,15 +347,15 @@ class World extends React.Component {
                         this.state.sun = component;
                     }}
                 />
-                {this.state.mercury ? <Mercury parent={this.state.world} loop={this.state.loop.mercury}/> : <Empty/>}
-                {this.state.venus ? <Venus parent={this.state.world} loop={this.state.loop.venus} /> : <Empty/>}
+                {this.state.mercury ? <Mercury ref="mercury" parent={this.state.world} loop={this.state.loop.mercury}/> : <Empty/>}
+                {this.state.venus ? <Venus ref="venus" parent={this.state.world} loop={this.state.loop.venus} /> : <Empty/>}
                 {this.state.earth ? <Earth ref="earth" parent={this.state.world} loop={this.state.loop.earth} /> : <Empty/>}
-                {this.state.mars ? <Mars parent={this.state.world} loop={this.state.loop.mars} /> : <Empty/>}
-                {this.state.jupiter ? <Jupiter parent={this.state.world} loop={this.state.loop.jupiter} /> : <Empty/>}
+                {this.state.mars ? <Mars ref="mars" parent={this.state.world} loop={this.state.loop.mars} /> : <Empty/>}
+                {this.state.jupiter ? <Jupiter ref="jupiter" parent={this.state.world} loop={this.state.loop.jupiter} /> : <Empty/>}
                 {this.state.saturn ? <Saturn ref="saturn" parent={this.refs.world} loop={this.state.loop.saturn}/> : <Empty/>}
-                {this.state.uranus ? <Uranus parent={this.state.world} loop={this.state.loop.uranus} /> : <Empty/>}
-                {this.state.neptune ? <Neptune parent={this.state.world} loop={this.state.loop.neptune} /> : <Empty/>}
-                {this.state.pluto ? <Pluto parent={this.state.world} loop={this.state.loop.pluto} /> : <Empty/>}
+                {this.state.uranus ? <Uranus ref="uranus" parent={this.state.world} loop={this.state.loop.uranus} /> : <Empty/>}
+                {this.state.neptune ? <Neptune ref="neptune" parent={this.state.world} loop={this.state.loop.neptune} /> : <Empty/>}
+                {this.state.pluto ? <Pluto ref="pluto" parent={this.state.world} loop={this.state.loop.pluto} /> : <Empty/>}
             </App>
         );
     }

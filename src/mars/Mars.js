@@ -20,6 +20,11 @@ export default class Mars extends React.Component {
 
     loop = new WHS.Loop(() => {
         if(!this.props.loop) return;
+        if(this.props.name) {
+            this.props.name.position.x = this.state.mars.position.x + 10;
+            this.props.name.position.y = this.state.mars.position.y + 10;
+            this.props.name.position.z = this.state.mars.position.z;
+        }
         // eslint-disable-next-line
         this.state.mars.rotation.y += Constants.ROTATION_SCALE / Constants.MARS.period;
 

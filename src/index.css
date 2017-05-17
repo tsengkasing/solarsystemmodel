@@ -7,7 +7,7 @@ body {
 
 .controls {
     background-color: white;
-    width: 128px;
+    min-width: 200px;
     z-index: 999;
     position: fixed;
     top: 0;

@@ -63,6 +63,9 @@ class World extends React.Component {
 
             view_target: new WHS.Sphere({modules: [new PHYSICS.SphereModule()]}),
 
+            //场景
+            scene: new WHS.app.SceneModule(),
+
             //视角
             view: new WHS.app.CameraModule({
                 position: new THREE.Vector3(0, 100, 400),
@@ -92,7 +95,9 @@ class World extends React.Component {
                 uranus: true,
                 neptune: true,
                 pluto: true,
-            }
+            },
+
+            name: []
         }
     }
 
@@ -107,23 +112,14 @@ class World extends React.Component {
     updateCamera = () => {
         if(this.props.view === 'overall') { return; }
 
-        let position = this.refs[this.props.view].state[this.props.view].position;
-        this.state.view.camera.position = position;
+        // eslint-disable-next-line
+        let {x, y, z} = this.refs[this.props.view].state[this.props.view].position;
+        this.state.view.camera.position = {x: x, y: y, z: z};
+
+        //自转角度
+        this.angle -= Constants[this.props.view.toUpperCase()].period * Math.PI / 180;
+        // eslint-disable-next-line
         this.state.view.camera._native.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), this.angle);
-
-        switch (this.props.view) {
-            case 'earth':
-                this.angle -= 0.5 * Math.PI / 180;
-                break;
-            case 'mars':
-                this.angle -= 0.5 * Math.PI / 180;
-                break;
-            case 'saturn':
-                this.angle -= 0.5 * Math.PI / 180;
-                break;
-
-            default:
-        }
 
     };
 
@@ -151,7 +147,7 @@ class World extends React.Component {
     };
 
     drawOrbit = (radius, rotation) => {
-        let segments = 64,
+        let segments = 128,
             geometry = new THREE.CircleGeometry( radius, segments );
 
         geometry.vertices.shift();
@@ -179,20 +175,10 @@ class World extends React.Component {
         if(rotation)
             orbit.rotation.z=rotation;
         else
-            orbit.position.z=0;
+            orbit.rotation.z=0;
 
         this.state.world.add(orbit);
     };
-
-    componentWillReceiveProps(props) {
-        // if(props && props.view) {
-        //     if(props.view === 'overall') {
-        //         this.loop.stop();
-        //     }else {
-        //         this.loop.start();
-        //     }
-        // }
-    }
 
     componentDidMount() {
 
@@ -244,10 +230,47 @@ class World extends React.Component {
         //     // console.log(this.state.view);
         // }, false);
 
+        new THREE.FontLoader().load('fonts/yeliqunjiheqiebianticu_Regular.json', font => {
+            this.addStarNames(font);
+        });
+
         this.setUpMouseListener();
 
         this.setUpKeyListener();
     }
+
+    addStarNames = (font) => {
+        const opts = {
+            font: font,
+            size: 4,
+            height: 1,
+            curveSegments: 32,
+            bevelEnabled: false,
+            bevelThickness: 1,
+            bevelSize: 0.3,
+            bevelSegments: 5
+        };
+
+        let star_name_label = [];
+        let star_names = ['太阳', '水星', '金星', '地球', '火星', '木星', '土星', '天王星', '海王星', '冥王星'];
+        // let star_names = ['SUN', 'Mercury', 'Venus', 'Earth', 'Mars', 'Juniper', 'Saturn', 'Uranus', 'Neptune', 'Pluto'];
+        star_names.forEach((star, index)=>{
+            let text = new THREE.Mesh(new THREE.TextGeometry(star, opts),
+                new THREE.MeshBasicMaterial({ color: 0xffffff }));
+            // text.geometry.vertices = text.geometry.vertices.slice(0, 100);
+            this.state.scene.scene.add(text);
+            // text.position.x = index * 1000;
+            star_name_label.push(text);
+        });
+
+        //设置太阳的位置
+        star_name_label[0].position.x = -6;
+        star_name_label[0].position.y = 24;
+
+        this.setState({
+            name: star_name_label
+        })
+    };
 
     setUpMouseListener = () => {
         this.state.sun.on('mouseover', () => {
@@ -276,7 +299,7 @@ class World extends React.Component {
         return (
             <App modules={[
                     new WHS.app.ElementModule(),
-                    new WHS.app.SceneModule(),
+                    this.state.scene,
                     this.state.view,
                     new WHS.app.RenderingModule({
                         bgColor: 0x2a3340,
@@ -334,12 +357,14 @@ class World extends React.Component {
                 <Sphere
                     geometry={{
                         radius: Constants.SUN.model_diam / 2,
-                        detail: 2
+                        detail: 2,
+                        widthSegments: 64, // Number
+                        heightSegments: 64 // Number
                     }}
                     material={new THREE.MeshStandardMaterial({
                         color: Constants.SUN.color,
                         shading: THREE.FlatShading,
-                        roughness: 0.9,
+                        roughness: 0,
                         emissive: 0x270000
                     })}
                     refComponent={component => {
@@ -347,15 +372,15 @@ class World extends React.Component {
                         this.state.sun = component;
                     }}
                 />
-                {this.state.mercury ? <Mercury ref="mercury" parent={this.state.world} loop={this.state.loop.mercury}/> : <Empty/>}
-                {this.state.venus ? <Venus ref="venus" parent={this.state.world} loop={this.state.loop.venus} /> : <Empty/>}
-                {this.state.earth ? <Earth ref="earth" parent={this.state.world} loop={this.state.loop.earth} /> : <Empty/>}
-                {this.state.mars ? <Mars ref="mars" parent={this.state.world} loop={this.state.loop.mars} /> : <Empty/>}
-                {this.state.jupiter ? <Jupiter ref="jupiter" parent={this.state.world} loop={this.state.loop.jupiter} /> : <Empty/>}
-                {this.state.saturn ? <Saturn ref="saturn" parent={this.refs.world} loop={this.state.loop.saturn}/> : <Empty/>}
-                {this.state.uranus ? <Uranus ref="uranus" parent={this.state.world} loop={this.state.loop.uranus} /> : <Empty/>}
-                {this.state.neptune ? <Neptune ref="neptune" parent={this.state.world} loop={this.state.loop.neptune} /> : <Empty/>}
-                {this.state.pluto ? <Pluto ref="pluto" parent={this.state.world} loop={this.state.loop.pluto} /> : <Empty/>}
+                {this.state.mercury ? <Mercury ref="mercury" parent={this.state.world} loop={this.state.loop.mercury} name={this.state.name[1]}/> : <Empty/>}
+                {this.state.venus ? <Venus ref="venus" parent={this.state.world} loop={this.state.loop.venus} name={this.state.name[2]} /> : <Empty/>}
+                {this.state.earth ? <Earth ref="earth" parent={this.state.world} loop={this.state.loop.earth} name={this.state.name[3]} /> : <Empty/>}
+                {this.state.mars ? <Mars ref="mars" parent={this.state.world} loop={this.state.loop.mars} name={this.state.name[4]} /> : <Empty/>}
+                {this.state.jupiter ? <Jupiter ref="jupiter" parent={this.state.world} loop={this.state.loop.jupiter}  name={this.state.name[5]}/> : <Empty/>}
+                {this.state.saturn ? <Saturn ref="saturn" parent={this.refs.world} loop={this.state.loop.saturn} name={this.state.name[6]}/> : <Empty/>}
+                {this.state.uranus ? <Uranus ref="uranus" parent={this.state.world} loop={this.state.loop.uranus} name={this.state.name[7]} /> : <Empty/>}
+                {this.state.neptune ? <Neptune ref="neptune" parent={this.state.world} loop={this.state.loop.neptune} name={this.state.name[8]} /> : <Empty/>}
+                {this.state.pluto ? <Pluto ref="pluto" parent={this.state.world} loop={this.state.loop.pluto} name={this.state.name[9]} /> : <Empty/>}
             </App>
         );
     }

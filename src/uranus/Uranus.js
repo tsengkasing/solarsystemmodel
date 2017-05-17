@@ -20,6 +20,11 @@ export default class Uranus extends React.Component {
 
     loop = new WHS.Loop(() => {
         if(!this.props.loop) return;
+        if(this.props.name) {
+            this.props.name.position.x = this.state.uranus.position.x + 10;
+            this.props.name.position.y = this.state.uranus.position.y + 10;
+            this.props.name.position.z = this.state.uranus.position.z;
+        }
         // eslint-disable-next-line
         this.state.uranus.rotation.y += Constants.ROTATION_SCALE / Constants.URANUS.period;
 

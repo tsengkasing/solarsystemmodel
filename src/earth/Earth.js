@@ -20,6 +20,11 @@ export default class Earth extends React.Component {
 
     loop = new WHS.Loop(() => {
         if(!this.props.loop) return;
+        if(this.props.name) {
+            this.props.name.position.x = this.state.earth.position.x + 10;
+            this.props.name.position.y = this.state.earth.position.y + 10;
+            this.props.name.position.z = this.state.earth.position.z;
+        }
         // eslint-disable-next-line
         this.state.earth.rotation.y += Constants.ROTATION_SCALE / Constants.EARTH.period;
 
@@ -39,6 +44,7 @@ export default class Earth extends React.Component {
         this.props.parent.addLoop(this.loop);
         this.loop.start();
     }
+
 
     render() {
         return (

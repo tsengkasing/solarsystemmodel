@@ -20,6 +20,11 @@ export default class Mercury extends React.Component {
 
     loop = new WHS.Loop(() => {
         if(!this.props.loop) return;
+        if(this.props.name) {
+            this.props.name.position.x = this.state.mercury.position.x + 5;
+            this.props.name.position.y = this.state.mercury.position.y + 5;
+            this.props.name.position.z = this.state.mercury.position.z;
+        }
         // eslint-disable-next-line
         this.state.mercury.rotation.y += Constants.ROTATION_SCALE / Constants.MERCURY.period;
 

@@ -38,8 +38,8 @@ export default class App extends React.Component {
                 <div>
                     <World view={this.state.view}/>
                 </div>
-                <div className="controls">
-                    <MuiThemeProvider>
+                <MuiThemeProvider>
+                    <div className="controls">
                         <div>
                             <RadioButtonGroup name="view" defaultSelected="overall" onChange={this.handleSelectView}
                                               valueSelected={this.state.view}>
@@ -49,8 +49,28 @@ export default class App extends React.Component {
                                     style={styles.radioButton}
                                 />
                                 <RadioButton
+                                    value="mercury"
+                                    label="水星视角"
+                                    style={styles.radioButton}
+                                />
+                                <RadioButton
+                                    value="venus"
+                                    label="金星视角"
+                                    style={styles.radioButton}
+                                />
+                                <RadioButton
                                     value="earth"
                                     label="地球视角"
+                                    style={styles.radioButton}
+                                />
+                                <RadioButton
+                                    value="mars"
+                                    label="火星视角"
+                                    style={styles.radioButton}
+                                />
+                                <RadioButton
+                                    value="jupiter"
+                                    label="木星视角"
                                     style={styles.radioButton}
                                 />
                                 <RadioButton
@@ -58,10 +78,25 @@ export default class App extends React.Component {
                                     label="土星视角"
                                     style={styles.radioButton}
                                 />
+                                <RadioButton
+                                    value="uranus"
+                                    label="天王星视角"
+                                    style={styles.radioButton}
+                                />
+                                <RadioButton
+                                    value="neptune"
+                                    label="海王星视角"
+                                    style={styles.radioButton}
+                                />
+                                <RadioButton
+                                    value="pluto"
+                                    label="冥王星视角"
+                                    style={styles.radioButton}
+                                />
                             </RadioButtonGroup>
                         </div>
-                    </MuiThemeProvider>
-                </div>
+                    </div>
+                </MuiThemeProvider>
             </div>
         );
     }

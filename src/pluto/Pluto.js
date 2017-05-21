@@ -19,14 +19,17 @@ export default class Pluto extends React.Component {
     }
 
     loop = new WHS.Loop(() => {
-        if(!this.props.loop) return;
+        if(this.props.loop.rotation) {
+            // eslint-disable-next-line
+            this.state.pluto.rotation.y += Constants.ROTATION_SCALE / Constants.PLUTO.period;
+        }
+
+        if(!this.props.loop.revolution) return;
         if(this.props.name) {
             this.props.name.position.x = this.state.pluto.position.x + 10;
             this.props.name.position.y = this.state.pluto.position.y + 10;
             this.props.name.position.z = this.state.pluto.position.z;
         }
-        // eslint-disable-next-line
-        this.state.pluto.rotation.y += Constants.ROTATION_SCALE / Constants.PLUTO.period;
 
         // eslint-disable-next-line
         this.state.pluto.data.angle -= Constants.PLUTO.velocity;

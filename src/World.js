@@ -17,7 +17,6 @@ import Neptune from './neptune/Neptune';
 import Pluto from './pluto/Pluto';
 
 const Empty = () => <div/>;
-const PI_2 = Math.PI / 2;
 const mouse = new WHS.app.VirtualMouseModule();
 
 const moveCamera = (event, position) => {
@@ -85,18 +84,6 @@ class World extends React.Component {
             neptune: false,
             pluto: false,
 
-            loop: {
-                mercury: true,
-                venus: true,
-                earth: true,
-                mars: true,
-                jupiter: true,
-                saturn: true,
-                uranus: true,
-                neptune: true,
-                pluto: true,
-            },
-
             name: []
         }
     }
@@ -112,8 +99,8 @@ class World extends React.Component {
     updateCamera = () => {
         if(this.props.view === 'overall') { return; }
 
-        // eslint-disable-next-line
         let {x, y, z} = this.refs[this.props.view].state[this.props.view].position;
+        // eslint-disable-next-line
         this.state.view.camera.position = {x: x, y: y, z: z};
 
         //自转角度
@@ -372,15 +359,34 @@ class World extends React.Component {
                         this.state.sun = component;
                     }}
                 />
-                {this.state.mercury ? <Mercury ref="mercury" parent={this.state.world} loop={this.state.loop.mercury} name={this.state.name[1]}/> : <Empty/>}
-                {this.state.venus ? <Venus ref="venus" parent={this.state.world} loop={this.state.loop.venus} name={this.state.name[2]} /> : <Empty/>}
-                {this.state.earth ? <Earth ref="earth" parent={this.state.world} loop={this.state.loop.earth} name={this.state.name[3]} /> : <Empty/>}
-                {this.state.mars ? <Mars ref="mars" parent={this.state.world} loop={this.state.loop.mars} name={this.state.name[4]} /> : <Empty/>}
-                {this.state.jupiter ? <Jupiter ref="jupiter" parent={this.state.world} loop={this.state.loop.jupiter}  name={this.state.name[5]}/> : <Empty/>}
-                {this.state.saturn ? <Saturn ref="saturn" parent={this.refs.world} loop={this.state.loop.saturn} name={this.state.name[6]}/> : <Empty/>}
-                {this.state.uranus ? <Uranus ref="uranus" parent={this.state.world} loop={this.state.loop.uranus} name={this.state.name[7]} /> : <Empty/>}
-                {this.state.neptune ? <Neptune ref="neptune" parent={this.state.world} loop={this.state.loop.neptune} name={this.state.name[8]} /> : <Empty/>}
-                {this.state.pluto ? <Pluto ref="pluto" parent={this.state.world} loop={this.state.loop.pluto} name={this.state.name[9]} /> : <Empty/>}
+                {this.state.mercury ? <Mercury ref="mercury" parent={this.state.world}
+                                               loop={{rotation: this.props.rotation[0], revolution: this.props.revolution[0]}}
+                                               name={this.state.name[1]}/> : <Empty/>}
+
+                {this.state.venus ? <Venus ref="venus" parent={this.state.world}
+                                           loop={{rotation: this.props.rotation[1], revolution: this.props.revolution[1]}}
+                                           name={this.state.name[2]} /> : <Empty/>}
+                {this.state.earth ? <Earth ref="earth" parent={this.state.world}
+                                           loop={{rotation: this.props.rotation[2], revolution: this.props.revolution[2]}}
+                                           name={this.state.name[3]} /> : <Empty/>}
+                {this.state.mars ? <Mars ref="mars" parent={this.state.world}
+                                         loop={{rotation: this.props.rotation[3], revolution: this.props.revolution[3]}}
+                                         name={this.state.name[4]} /> : <Empty/>}
+                {this.state.jupiter ? <Jupiter ref="jupiter" parent={this.state.world}
+                                               loop={{rotation: this.props.rotation[4], revolution: this.props.revolution[4]}}
+                                               name={this.state.name[5]}/> : <Empty/>}
+                {this.state.saturn ? <Saturn ref="saturn" parent={this.refs.world}
+                                             loop={{rotation: this.props.rotation[5], revolution: this.props.revolution[5]}}
+                                             name={this.state.name[6]}/> : <Empty/>}
+                {this.state.uranus ? <Uranus ref="uranus" parent={this.state.world}
+                                             loop={{rotation: this.props.rotation[6], revolution: this.props.revolution[6]}}
+                                             name={this.state.name[7]} /> : <Empty/>}
+                {this.state.neptune ? <Neptune ref="neptune" parent={this.state.world}
+                                               loop={{rotation: this.props.rotation[7], revolution: this.props.revolution[7]}}
+                                               name={this.state.name[8]} /> : <Empty/>}
+                {this.state.pluto ? <Pluto ref="pluto" parent={this.state.world}
+                                           loop={{rotation: this.props.rotation[8], revolution: this.props.revolution[8]}}
+                                           name={this.state.name[9]} /> : <Empty/>}
             </App>
         );
     }

@@ -7,9 +7,66 @@ body {
 
 .controls {
     background-color: white;
-    min-width: 200px;
+    min-width: 380px;
     z-index: 999;
     position: fixed;
     top: 0;
     left: 0;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.controls__mask {
+    /*background-color: rgba(255, 255, 255, .5);*/
+}
+
+.controls__panel {
+    margin: 16px 26px;
+    background-color: white;
+}
+
+.controls__title {
+    font-size: 18px;
+    text-align: center;
+    margin: 12px;
+    padding: 4px;
+    background-color: white;
+    cursor: pointer;
+    opacity: 0.2;
+}
+
+.controls__title:hover {
+    opacity: 1;
+}
+
+.controls__subtitle {
+    text-align: center;
+    padding: 8px;
+    cursor: pointer;
+    border-bottom: 2px solid #66CCFF;
+}
+
+.controls__content {
+    transition: all .5s ease;
+    overflow: hidden;
+}
+
+.controls__content__row {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    margin: 8px 0;
+}
+
+.controls__content__row div {
+    width: 30%;
+    text-align: center;
+}
+
+.controls__radioButtons {
+    margin: 0 16px;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    height: 100%;
+    justify-content: space-around;
 }

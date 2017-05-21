@@ -19,14 +19,17 @@ export default class Jupiter extends React.Component {
     }
 
     loop = new WHS.Loop(() => {
-        if(!this.props.loop) return;
+        if(this.props.loop.rotation) {
+            // eslint-disable-next-line
+            this.state.jupiter.rotation.y += Constants.ROTATION_SCALE / Constants.JUPITER.period;
+        }
+
+        if(!this.props.loop.revolution) return;
         if(this.props.name) {
             this.props.name.position.x = this.state.jupiter.position.x + 20;
             this.props.name.position.y = this.state.jupiter.position.y + 20;
             this.props.name.position.z = this.state.jupiter.position.z;
         }
-        // eslint-disable-next-line
-        this.state.jupiter.rotation.y += Constants.ROTATION_SCALE / Constants.JUPITER.period;
 
         // eslint-disable-next-line
         this.state.jupiter.data.angle -= Constants.JUPITER.velocity;

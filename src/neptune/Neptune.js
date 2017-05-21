@@ -19,14 +19,17 @@ export default class Neptune extends React.Component {
     }
 
     loop = new WHS.Loop(() => {
-        if(!this.props.loop) return;
+        if(this.props.loop.rotation) {
+            // eslint-disable-next-line
+            this.state.neptune.rotation.y += Constants.ROTATION_SCALE / Constants.NEPTUNE.period;
+        }
+
+        if(!this.props.loop.revolution) return;
         if(this.props.name) {
             this.props.name.position.x = this.state.neptune.position.x + 10;
             this.props.name.position.y = this.state.neptune.position.y + 10;
             this.props.name.position.z = this.state.neptune.position.z;
         }
-        // eslint-disable-next-line
-        this.state.neptune.rotation.y += Constants.ROTATION_SCALE / Constants.NEPTUNE.period;
 
         // eslint-disable-next-line
         this.state.neptune.data.angle -= Constants.NEPTUNE.velocity;

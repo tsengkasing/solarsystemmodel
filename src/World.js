@@ -16,6 +16,8 @@ import Uranus from './uranus/Uranus';
 import Neptune from './neptune/Neptune';
 import Pluto from './pluto/Pluto';
 
+import Utils from './Utils';
+
 const Empty = () => <div/>;
 const mouse = new WHS.app.VirtualMouseModule();
 
@@ -51,6 +53,24 @@ const moveCamera = (event, position) => {
     }
     return {x, y, z};
 };
+
+const WIDTH = window.innerWidth,
+    HEIGHT = window.innerHeight;
+
+let stars = [];
+
+
+function getMat(color){
+    // our material is a phong material, with no shininess (highlight) and a black specular
+    return new THREE.MeshStandardMaterial({
+        color:color,
+        roughness:.9,
+        transparent: true,
+        opacity: 0,
+        emissive:0x270000,
+        shading:THREE.FlatShading
+    });
+}
 
 class World extends React.Component {
 
@@ -94,6 +114,12 @@ class World extends React.Component {
 
         this.updateCamera();
 
+        // let _z = this.state.view.camera.position.z;
+        // if(_z > -4000)
+        //     this.state.view.camera.position.z -= 3;
+        // else
+        //     this.state.view.camera.position.z += 3;
+        // console.log(this.state.view.camera.position.z);
     });
 
     updateCamera = () => {
@@ -109,6 +135,35 @@ class World extends React.Component {
         this.state.view.camera._native.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), this.angle);
 
     };
+
+
+    //=========================================================================================================
+    //背景的星空
+    addStars = () => {
+        for ( let z= -3000; z < 3000; z+=20 ) {
+
+            let geometry   = new THREE.SphereGeometry(0.5, 32, 32);
+            let material = new THREE.MeshBasicMaterial( {color: 0xffffff} );
+            let sphere = new THREE.Mesh(geometry, material);
+
+            sphere.position.x = Utils.randomRange(-1 * Math.floor(WIDTH/2),Math.floor(WIDTH/2));
+            sphere.position.y = Utils.randomRange(-1 * Math.floor(HEIGHT/2),Math.floor(HEIGHT/2));
+
+            // Then set the z position to where it is in the loop (distance of camera)
+            sphere.position.z = z;
+
+            // scale it up a bit
+            sphere.scale.x = sphere.scale.y = 2;
+
+            //add the sphere to the scene
+            this.state.scene.scene.add( sphere );
+
+            //finally push it to the stars array
+            stars.push(sphere);
+        }
+    };
+    //背景的星空
+    //=========================================================================================================
 
     criterion = () => {
         window.__s = new WHS.Sphere({ // Create sphere comonent.
@@ -134,7 +189,7 @@ class World extends React.Component {
     };
 
     drawOrbit = (radius, rotation) => {
-        let segments = 128,
+        let segments = 512,
             geometry = new THREE.CircleGeometry( radius, segments );
 
         geometry.vertices.shift();
@@ -224,6 +279,8 @@ class World extends React.Component {
         this.setUpMouseListener();
 
         this.setUpKeyListener();
+
+        this.addStars();
     }
 
     addStarNames = (font) => {

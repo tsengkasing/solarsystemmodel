@@ -7,6 +7,7 @@ import * as WHS from 'whs';
 import * as THREE from 'three';
 
 import Constants from '../Constants';
+import TEXTURE_MERCURY from '../textures/mercury.jpg';
 
 export default class Mercury extends React.Component {
 
@@ -59,13 +60,13 @@ export default class Mercury extends React.Component {
                 <Sphere
                     geometry={{
                         radius: Constants.MERCURY.model_diam / 2,
-                        detail: 2
+                        detail: 2,
+                        widthSegments: 32, // Number
+                        heightSegments: 32 // Number
                     }}
                     material={new THREE.MeshStandardMaterial({
-                        color: Constants.MERCURY.color,
-                        shading: THREE.FlatShading,
-                        roughness: 0.8,
-                        emissive: 0x270000
+                        map: THREE.ImageUtils.loadTexture(TEXTURE_MERCURY),
+                        roughness: 0.8
                     })}
                     position={[Constants.MERCURY.orbit_radius, 0, 0]}
                     refComponent={component => {

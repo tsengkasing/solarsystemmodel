@@ -6,6 +6,7 @@ import {Sphere, Group} from 'react-whs';
 import * as WHS from 'whs';
 import * as THREE from 'three';
 
+import TEXTURE_PLUTO from '../textures/pluto.jpg';
 import Constants from '../Constants';
 
 export default class Pluto extends React.Component {
@@ -14,7 +15,8 @@ export default class Pluto extends React.Component {
         super(props);
         this.state = {
             pluto: null,
-            group: null
+            group: null,
+            name: null
         }
     }
 
@@ -38,6 +40,12 @@ export default class Pluto extends React.Component {
         this.state.pluto.position.x = Math.cos(this.state.pluto.data.angle) * Constants.PLUTO.orbit_radius;
         // eslint-disable-next-line
         this.state.pluto.position.z = Math.sin(this.state.pluto.data.angle) * Constants.PLUTO.orbit_radius;
+
+        if(this.state.name) {
+            this.state.name.position.x = this.state.pluto.position.x + 10;
+            this.state.name.position.y = this.state.pluto.position.y + 10;
+            this.state.name.position.z = this.state.pluto.position.z;
+        }
     });
 
     componentDidMount() {
@@ -59,13 +67,13 @@ export default class Pluto extends React.Component {
                 <Sphere
                     geometry={{
                         radius: Constants.PLUTO.model_diam / 2,
-                        detail: 2
+                        detail: 2,
+                        widthSegments: 32, // Number
+                        heightSegments: 32 // Number
                     }}
                     material={new THREE.MeshStandardMaterial({
-                        color: Constants.PLUTO.color,
-                        shading: THREE.FlatShading,
-                        roughness: 0.8,
-                        emissive: 0x270000
+                        map: THREE.ImageUtils.loadTexture(TEXTURE_PLUTO),
+                        roughness: 0.8
                     })}
                     position={[Constants.PLUTO.orbit_radius, 0, 0]}
                     refComponent={component => {

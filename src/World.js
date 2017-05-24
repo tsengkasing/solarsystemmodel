@@ -18,6 +18,8 @@ import Pluto from './pluto/Pluto';
 
 import Utils from './Utils';
 
+import TEXTURE_SUN from './textures/sun.jpg';
+
 const Empty = () => <div/>;
 const mouse = new WHS.app.VirtualMouseModule();
 
@@ -132,7 +134,7 @@ class World extends React.Component {
         //自转角度
         this.angle -= Constants[this.props.view.toUpperCase()].period * Math.PI / 180;
         // eslint-disable-next-line
-        this.state.view.camera._native.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), this.angle);
+        // this.state.view.camera._native.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), this.angle);
 
     };
 
@@ -140,7 +142,7 @@ class World extends React.Component {
     //=========================================================================================================
     //背景的星空
     addStars = () => {
-        for ( let z= -3000; z < 3000; z+=20 ) {
+        for ( let z= -2000; z < 2000; z+=20 ) {
 
             let geometry   = new THREE.SphereGeometry(0.5, 32, 32);
             let material = new THREE.MeshBasicMaterial( {color: 0xffffff} );
@@ -164,29 +166,6 @@ class World extends React.Component {
     };
     //背景的星空
     //=========================================================================================================
-
-    criterion = () => {
-        window.__s = new WHS.Sphere({ // Create sphere comonent.
-            geometry: {
-                radius: 3,
-                widthSegments: 32,
-                heightSegments: 32
-            },
-
-            modules: [
-                new PHYSICS.SphereModule({
-                    mass: 1,
-                    restitution: 1
-                })
-            ],
-
-            material: new THREE.MeshPhongMaterial({
-                color: 0xffffff
-            }),
-
-            position: new THREE.Vector3(0, 100, 0)
-        });
-    };
 
     drawOrbit = (radius, rotation) => {
         let segments = 512,
@@ -250,28 +229,6 @@ class World extends React.Component {
             pluto: true,
         });
 
-        // document.addEventListener('mousemove', (event) => {
-        //     const movementX = typeof event.movementX === 'number'
-        //         ? event.movementX : typeof event.mozMovementX === 'number'
-        //             ? event.mozMovementX : typeof event.getMovementX === 'function'
-        //                 ? event.getMovementX() : 0;
-        //     const movementY = typeof event.movementY === 'number'
-        //         ? event.movementY : typeof event.mozMovementY === 'number'
-        //             ? event.mozMovementY : typeof event.getMovementY === 'function'
-        //                 ? event.getMovementY() : 0;
-        //
-        //     // console.log(movementX, movementY);
-        //     // this.state.view.camera.rotation.y -= movementX * 0.002;
-        //     // this.state.view.camera.rotation.x -= movementY * 0.002;
-        //     // this.state.view.camera.rotation.x -= Math.max(-PI_2, Math.min(PI_2, this.state.view.camera.rotation.x));
-        //     this.state.view.camera._native.rotation.y -= movementX * 0.002;
-        //     this.state.view.camera._native.rotation.x -= movementY * 0.002;
-        //     this.state.view.camera._native.rotation.x -= Math.max(-PI_2, Math.min(PI_2, this.state.view.camera.rotation.x));
-        //     let v = this.state.view.camera._native.rotation;
-        //     console.log(v.x, v.y, v.z);
-        //     // console.log(this.state.view);
-        // }, false);
-
         new THREE.FontLoader().load('fonts/yeliqunjiheqiebianticu_Regular.json', font => {
             this.addStarNames(font);
         });
@@ -320,6 +277,7 @@ class World extends React.Component {
         this.state.sun.on('mouseover', () => {
             // this.state.sun.material.color.set(0xffff00);
             console.log('mouseover sun');
+            this.props.intro(0);
         });
 
         mouse.track(this.state.sun);
@@ -370,12 +328,12 @@ class World extends React.Component {
                 }}
                  ref="world"
             >
-                <AmbientLight
-                    light={{
-                        color: 0x663344,
-                        intensity: 2
-                    }}
-                />
+                {/*<AmbientLight*/}
+                    {/*light={{*/}
+                        {/*color: 0x663344,*/}
+                        {/*intensity: 2*/}
+                    {/*}}*/}
+                {/*/>*/}
                 <DirectionalLight
                     light={{
                         color: 0xffffff,
@@ -406,10 +364,13 @@ class World extends React.Component {
                         heightSegments: 64 // Number
                     }}
                     material={new THREE.MeshStandardMaterial({
-                        color: Constants.SUN.color,
-                        shading: THREE.FlatShading,
-                        roughness: 0,
-                        emissive: 0x270000
+                        map: THREE.ImageUtils.loadTexture(TEXTURE_SUN),
+                        emissive: 0xff0000
+                        // map: THREE.TextureLoader(TEXTURE_SUN)
+                        // color: Constants.SUN.color,
+                        // shading: THREE.FlatShading,
+                        // roughness: 0,
+                        // emissive: 0x270000
                     })}
                     refComponent={component => {
                         // eslint-disable-next-line
@@ -425,6 +386,7 @@ class World extends React.Component {
                                            name={this.state.name[2]} /> : <Empty/>}
                 {this.state.earth ? <Earth ref="earth" parent={this.state.world}
                                            loop={{rotation: this.props.rotation[2], revolution: this.props.revolution[2]}}
+                                           loopOfMoon={{rotation: this.props.rotation[9], revolution: this.props.revolution[9]}}
                                            name={this.state.name[3]} /> : <Empty/>}
                 {this.state.mars ? <Mars ref="mars" parent={this.state.world}
                                          loop={{rotation: this.props.rotation[3], revolution: this.props.revolution[3]}}

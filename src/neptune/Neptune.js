@@ -6,6 +6,7 @@ import {Sphere, Group} from 'react-whs';
 import * as WHS from 'whs';
 import * as THREE from 'three';
 
+import TEXTURE_NEPTUNE from '../textures/neptune.jpg';
 import Constants from '../Constants';
 
 export default class Neptune extends React.Component {
@@ -59,13 +60,13 @@ export default class Neptune extends React.Component {
                 <Sphere
                     geometry={{
                         radius: Constants.NEPTUNE.model_diam / 2,
-                        detail: 2
+                        detail: 2,
+                        widthSegments: 32, // Number
+                        heightSegments: 32 // Number
                     }}
                     material={new THREE.MeshStandardMaterial({
-                        color: Constants.NEPTUNE.color,
-                        shading: THREE.FlatShading,
-                        roughness: 0.8,
-                        emissive: 0x270000
+                        map: THREE.ImageUtils.loadTexture(TEXTURE_NEPTUNE),
+                        roughness: 0.8
                     })}
                     position={[Constants.NEPTUNE.orbit_radius, 0, 0]}
                     refComponent={component => {

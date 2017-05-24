@@ -4,7 +4,17 @@
 import React from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
+import {
+    Table,
+    TableBody,
+    TableHeader,
+    TableHeaderColumn,
+    TableRow,
+    TableRowColumn,
+} from 'material-ui/Table';
 import Checkbox from 'material-ui/Checkbox';
+import IconButton from 'material-ui/IconButton';
+import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import Paper from 'material-ui/Paper';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 
@@ -49,6 +59,10 @@ const stars = [
     {
         zh: '冥王星',
         en: 'pluto'
+    },
+    {
+        zh: '月球',
+        en: 'moon'
     }
 ];
 
@@ -58,14 +72,16 @@ export default class App extends React.Component {
         this.state = {
             view: 'overall',
 
-            rotation: new Array(9).fill(true),
+            rotation: new Array(10).fill(true),
 
-            revolution: new Array(9).fill(true),
-
+            revolution: new Array(10).fill(true),
 
             //控制面板
             display: false,
-            expanded: [false, false]
+            expanded: [false, false],
+
+            //介绍面板
+            intro: false,
         }
     }
 
@@ -76,10 +92,7 @@ export default class App extends React.Component {
     };
 
     handleSelectView = (event, value) => {
-        console.log(value);
-        this.setState({
-            view: value
-        })
+        this.setState({view: value})
     };
 
     handleCheckedRotation = (event, isInputChecked, star_index) => {
@@ -104,6 +117,15 @@ export default class App extends React.Component {
         setTimeout(()=>this.handleExpandPanel(0), 1200);
     }
 
+    handleDisplayIntroduction = (index) => {
+        this.setState({intro: true});
+        console.log(stars[index]);
+    };
+
+    handleCloseIntroduction = () => {
+        this.setState({intro: false});
+    };
+
     render() {
         const radio_button_style = {
             width: '80%'
@@ -111,61 +133,90 @@ export default class App extends React.Component {
         return (
             <div>
                 <div>
-                    <World view={this.state.view} rotation={this.state.rotation} revolution={this.state.revolution} />
+                    <World view={this.state.view} rotation={this.state.rotation} revolution={this.state.revolution} intro={this.handleDisplayIntroduction} />
                 </div>
                 <MuiThemeProvider>
-                    <div className="controls">
-                        <div className="controls__mask">
-                            <div className="controls__title bounceInLeft animated" style={this.state.display ? {opacity: 1} : {}} onClick={this.handleShowPanel}>控制面板</div>
-                            <div className={`controls__panel ${this.state.display ? 'bounceInDown animated' : 'bounceOutUp animated'}`}>
-                                <Paper zDepth={2}>
-                                    <div className="controls__subtitle" onClick={()=>this.handleExpandPanel(0)}>转动</div>
-                                </Paper>
-                                <div className="controls__content" style={{height: this.state.expanded[0] ? 300 : 0}}>
-                                    {stars.map((item, index)=>(
-                                        <div key={index} className="controls__content__row">
-                                            <div>{item.zh}</div>
-                                            <div>
-                                                <Checkbox
-                                                    label="公转"
-                                                    checked={this.state.revolution[index]}
-                                                    onCheck={(...args) =>this.handleCheckedRevolution(...args, index)}
-                                                />
+                    <div>
+                        <div className="controls">
+                            <div className="controls__mask">
+                                <div className="controls__title bounceInLeft animated" style={this.state.display ? {opacity: 1} : {}} onClick={this.handleShowPanel}>控制面板</div>
+                                <div className={`controls__panel ${this.state.display ? 'bounceInDown animated' : 'bounceOutUp animated'}`}>
+                                    <Paper zDepth={2}>
+                                        <div className="controls__subtitle" onClick={()=>this.handleExpandPanel(0)}>转动</div>
+                                    </Paper>
+                                    <div className="controls__content" style={{height: this.state.expanded[0] ? 330 : 0}}>
+                                        {stars.map((item, index)=>(
+                                            <div key={index} className="controls__content__row">
+                                                <div>{item.zh}</div>
+                                                <div>
+                                                    <Checkbox
+                                                        label="公转"
+                                                        checked={this.state.revolution[index]}
+                                                        onCheck={(...args) =>this.handleCheckedRevolution(...args, index)}
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <Checkbox
+                                                        label="自转"
+                                                        checked={this.state.rotation[index]}
+                                                        onCheck={(...args) =>this.handleCheckedRotation(...args, index)}
+                                                    />
+                                                </div>
                                             </div>
-                                            <div>
-                                                <Checkbox
-                                                    label="自转"
-                                                    checked={this.state.rotation[index]}
-                                                    onCheck={(...args) =>this.handleCheckedRotation(...args, index)}
-                                                />
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
+                                        ))}
+                                    </div>
 
-                            </div>
-                            <div className={`controls__panel ${this.state.display ? 'bounceInDown animated' : 'bounceOutUp animated'}`}>
-                                <Paper zDepth={2}>
-                                    <div className="controls__subtitle" onClick={()=>this.handleExpandPanel(1)}>视角</div>
-                                </Paper>
-                                <div className="controls__content" style={{height: this.state.expanded[1] ? 400 : 0}}>
-                                    <RadioButtonGroup name="view" defaultSelected="overall" onChange={this.handleSelectView}
-                                                      valueSelected={this.state.view} className="controls__radioButtons">
-                                        <RadioButton
-                                            value="overall"
-                                            label="上帝视角"
-                                            style={radio_button_style}
-                                        />
-                                        {stars.map((item, index) => (
+                                </div>
+                                <div className={`controls__panel ${this.state.display ? 'bounceInDown animated' : 'bounceOutUp animated'}`}>
+                                    <Paper zDepth={2}>
+                                        <div className="controls__subtitle" onClick={()=>this.handleExpandPanel(1)}>视角</div>
+                                    </Paper>
+                                    <div className="controls__content" style={{height: this.state.expanded[1] ? 400 : 0}}>
+                                        <RadioButtonGroup name="view" defaultSelected="overall" onChange={this.handleSelectView}
+                                                          valueSelected={this.state.view} className="controls__radioButtons">
                                             <RadioButton
-                                                key={index}
-                                                value={item.en}
-                                                label={item.zh}
+                                                value="overall"
+                                                label="上帝视角"
                                                 style={radio_button_style}
                                             />
-                                        ))}
-                                    </RadioButtonGroup>
+                                            {stars.map((item, index) => (
+                                                <RadioButton
+                                                    key={index}
+                                                    value={item.en}
+                                                    label={item.zh}
+                                                    style={radio_button_style}
+                                                />
+                                            ))}
+                                        </RadioButtonGroup>
+                                    </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div className={`introduction ${this.state.intro ? 'bounceInRight animated' : 'bounceOutRight animated'}`}>
+                            <Paper zDepth={2}>
+                                <div className="introduction__title">
+                                    <div className="introduction__title__text">太阳</div>
+                                    <IconButton tooltip="关闭" className="introduction__title__btn"
+                                                onTouchTap={this.handleCloseIntroduction}>
+                                        <NavigationClose />
+                                    </IconButton>
+                                </div>
+                            </Paper>
+                            <div className="introduction__content">
+                                <Table>
+                                    <TableHeader adjustForCheckbox={false} displaySelectAll={false}>
+                                        <TableRow>
+                                            <TableHeaderColumn>信息</TableHeaderColumn>
+                                            <TableHeaderColumn>内容</TableHeaderColumn>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody displayRowCheckbox={false}>
+                                        <TableRow>
+                                            <TableRowColumn>1</TableRowColumn>
+                                            <TableRowColumn>John Smith</TableRowColumn>
+                                        </TableRow>
+                                    </TableBody>
+                                </Table>
                             </div>
                         </div>
                     </div>

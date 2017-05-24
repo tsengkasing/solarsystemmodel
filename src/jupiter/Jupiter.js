@@ -6,6 +6,7 @@ import {Sphere, Group} from 'react-whs';
 import * as WHS from 'whs';
 import * as THREE from 'three';
 
+import TEXTURE_JUPITER from '../textures/jupiter.jpg';
 import Constants from '../Constants';
 
 export default class Jupiter extends React.Component {
@@ -60,13 +61,13 @@ export default class Jupiter extends React.Component {
                 <Sphere
                     geometry={{
                         radius: Constants.JUPITER.model_diam / 2,
-                        detail: 2
+                        detail: 2,
+                        widthSegments: 32, // Number
+                        heightSegments: 32 // Number
                     }}
                     material={new THREE.MeshStandardMaterial({
-                        color: Constants.JUPITER.color,
-                        shading: THREE.FlatShading,
-                        roughness: 0.8,
-                        emissive: 0x270000
+                        map: THREE.ImageUtils.loadTexture(TEXTURE_JUPITER),
+                        roughness: 0.8
                     })}
                     position={[Constants.JUPITER.orbit_radius, 0, 0]}
                     refComponent={component => {

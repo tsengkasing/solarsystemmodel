@@ -19,10 +19,14 @@ export default class Constants {
 
     //水星
     static MERCURY = {
+        //直径
         model_diam: 3.4 * diam_scale,
+        //公转轨道半径
         orbit_radius: 42* orbit_scale,
         color: 0x959595,
+        //自转周期 (天)
         period: 58.65,
+        //公转速度
         velocity: 0.0389 * velocity_scale,
         inclination: 7.0 / 180
     };
@@ -44,6 +48,16 @@ export default class Constants {
         color: 0x66CCFF,
         period: 0.99,
         velocity: 0.0298 * velocity_scale,
+        inclination: 0.0
+    };
+
+    //月球
+    static MOON = {
+        model_diam: 9.1 * 3 / 11 * diam_scale,
+        orbit_radius: 108* orbit_scale,
+        color: 0x66CCFF,
+        period: 27.32,
+        velocity: 0.0298 / 12 * velocity_scale,
         inclination: 0.0
     };
 

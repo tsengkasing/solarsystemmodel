@@ -70,3 +70,36 @@ body {
     height: 100%;
     justify-content: space-around;
 }
+
+.introduction {
+    margin: 12px;
+    max-width: 400px;
+    z-index: 999;
+    position: fixed;
+    top: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.introduction__title {
+    position: relative;
+    border-bottom: 2px solid #66CCFF;
+}
+
+.introduction__title__text {
+    text-align: center;
+    height: 48px;
+    line-height: 48px;
+    font-size: 20px;
+}
+
+.introduction__title__btn {
+    display: inline-block !important;
+    position: absolute !important;
+    top: 0;
+    right: 0;
+}
+
+.introduction__content {
+    background-color: white;
+}

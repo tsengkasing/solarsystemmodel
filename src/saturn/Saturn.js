@@ -6,6 +6,7 @@ import {Sphere, Group} from 'react-whs';
 import * as WHS from 'whs';
 import * as THREE from 'three';
 
+import TEXTURE_SATURN from '../textures/saturn.jpg';
 import Constants from '../Constants';
 
 const radiusMin = 110, // Min radius of the asteroid belt.
@@ -14,12 +15,22 @@ const radiusMin = 110, // Min radius of the asteroid belt.
     particleMinRadius = 0.1, // Min of asteroid radius.
     particleMaxRadius = 4; // Max of asteroid radius.
 
-const colors = {
-    green: 0x8fc999,
-    blue: 0x5fc4d0,
-    orange: 0xee5624,
-    yellow: 0xfaff70
-};
+const colors = [
+    0xaf8b73,
+    0xcda571,
+    0x91a5af,
+    0xf4b862,
+    0xdfa868,
+    0xc19781,
+    0x5d3a26,
+    0x496f92,
+    0x232019,
+    0xaf9a7b,
+    0xd3c19b,
+    0xe0c6a1,
+    0x29211e,
+    0x94866c
+];
 
 export default class Saturn extends React.Component {
 
@@ -111,12 +122,13 @@ export default class Saturn extends React.Component {
         asteroids.addTo(this.state.group);
 
         // Materials.
-        const mat = [
-            new THREE.MeshPhongMaterial({color: colors.green, shading: THREE.FlatShading}),
-            new THREE.MeshPhongMaterial({color: colors.blue, shading: THREE.FlatShading}),
-            new THREE.MeshPhongMaterial({color: colors.orange, shading: THREE.FlatShading}),
-            new THREE.MeshPhongMaterial({color: colors.yellow, shading: THREE.FlatShading})
-        ];
+        const mat = colors.map(color=>(new THREE.MeshPhongMaterial({color: color, shading: THREE.FlatShading})));
+        // const mat = [
+        //     new THREE.MeshPhongMaterial({color: colors.green, shading: THREE.FlatShading}),
+        //     new THREE.MeshPhongMaterial({color: colors.blue, shading: THREE.FlatShading}),
+        //     new THREE.MeshPhongMaterial({color: colors.orange, shading: THREE.FlatShading}),
+        //     new THREE.MeshPhongMaterial({color: colors.yellow, shading: THREE.FlatShading})
+        // ];
 
         for (let i = 0; i < particleCount; i++) {
             const particle = [s1, s2, s3, s4][Math.ceil(Math.random() * 3)].clone(),
@@ -131,11 +143,11 @@ export default class Saturn extends React.Component {
                 radius
             });
 
-            particle.material = mat[Math.floor(4 * Math.random())]; // Set custom THREE.Material to mesh.
+            particle.material = mat[Math.floor(colors.length * i / particleCount)]; // Set custom THREE.Material to mesh.
 
             // Particle data.
             particle.data = {
-                distance: radiusMin + Math.random() * (radiusMax - radiusMin),
+                distance: radiusMin + i / particleCount * (radiusMax - radiusMin),
                 angle: Math.random() * Math.PI * 2
             };
 
@@ -183,7 +195,7 @@ export default class Saturn extends React.Component {
 
             particle.position.x = Math.cos(particle.data.angle) * particle.data.distance + this.state.saturn.position.x;
             particle.position.z = Math.sin(particle.data.angle) * particle.data.distance + this.state.saturn.position.z;
-            particle.position.y = -10 * Math.random() + 4 + this.state.saturn.position.y;
+            // particle.position.y = -10 * Math.random() + 4 + this.state.saturn.position.y;
 
             particle.rotation.x += Math.PI / 60;
             particle.rotation.y += Math.PI / 60;
@@ -210,13 +222,13 @@ export default class Saturn extends React.Component {
                 <Sphere
                     geometry={{
                         radius: Constants.SATURN.model_diam / 2,
-                        detail: 2
+                        detail: 2,
+                        widthSegments: 32, // Number
+                        heightSegments: 32 // Number
                     }}
                     material={new THREE.MeshStandardMaterial({
-                        color: Constants.SATURN.color,
-                        shading: THREE.FlatShading,
-                        roughness: 0.8,
-                        emissive: 0x270000
+                        map: THREE.ImageUtils.loadTexture(TEXTURE_SATURN),
+                        roughness: 0.8
                     })}
                     position={[Constants.SATURN.orbit_radius, 0, 0]}
                     refComponent={component => {

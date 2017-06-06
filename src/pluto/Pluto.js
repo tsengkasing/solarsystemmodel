@@ -42,8 +42,11 @@ export default class Pluto extends React.Component {
         this.state.pluto.position.z = Math.sin(this.state.pluto.data.angle) * Constants.PLUTO.orbit_radius;
 
         if(this.state.name) {
+            // eslint-disable-next-line
             this.state.name.position.x = this.state.pluto.position.x + 10;
+            // eslint-disable-next-line
             this.state.name.position.y = this.state.pluto.position.y + 10;
+            // eslint-disable-next-line
             this.state.name.position.z = this.state.pluto.position.z;
         }
     });
@@ -72,7 +75,7 @@ export default class Pluto extends React.Component {
                         heightSegments: 32 // Number
                     }}
                     material={new THREE.MeshStandardMaterial({
-                        map: THREE.ImageUtils.loadTexture(TEXTURE_PLUTO),
+                        map: new THREE.TextureLoader().load(TEXTURE_PLUTO),
                         roughness: 0.8
                     })}
                     position={[Constants.PLUTO.orbit_radius, 0, 0]}

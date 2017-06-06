@@ -11,7 +11,7 @@ import Constants from '../Constants';
 
 const radiusMin = 110, // Min radius of the asteroid belt.
     radiusMax = 220, // Max radius of the asteroid belt.
-    particleCount = 400, // Ammount of asteroids.
+    particleCount = 200, // Ammount of asteroids.
     particleMinRadius = 0.1, // Min of asteroid radius.
     particleMaxRadius = 4; // Max of asteroid radius.
 
@@ -227,7 +227,7 @@ export default class Saturn extends React.Component {
                         heightSegments: 32 // Number
                     }}
                     material={new THREE.MeshStandardMaterial({
-                        map: THREE.ImageUtils.loadTexture(TEXTURE_SATURN),
+                        map: new THREE.TextureLoader().load(TEXTURE_SATURN),
                         roughness: 0.8
                     })}
                     position={[Constants.SATURN.orbit_radius, 0, 0]}

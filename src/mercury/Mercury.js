@@ -65,7 +65,7 @@ export default class Mercury extends React.Component {
                         heightSegments: 32 // Number
                     }}
                     material={new THREE.MeshStandardMaterial({
-                        map: THREE.ImageUtils.loadTexture(TEXTURE_MERCURY),
+                        map: new THREE.TextureLoader().load(TEXTURE_MERCURY),
                         roughness: 0.8
                     })}
                     position={[Constants.MERCURY.orbit_radius, 0, 0]}

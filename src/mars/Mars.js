@@ -65,7 +65,7 @@ export default class Mars extends React.Component {
                         heightSegments: 32 // Number
                     }}
                     material={new THREE.MeshStandardMaterial({
-                        map: THREE.ImageUtils.loadTexture(TEXTURE_MARS),
+                        map: new THREE.TextureLoader().load(TEXTURE_MARS),
                         roughness: 0.8
                     })}
                     position={[Constants.MARS.orbit_radius, 0, 0]}

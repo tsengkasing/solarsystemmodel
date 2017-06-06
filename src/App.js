@@ -21,50 +21,11 @@ import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import World from './World';
 import './animate.css';
 
+import Constants from './Constants';
+
 injectTapEventPlugin();
 
-const stars = [
-    {
-        zh: '水星',
-        en: 'mercury'
-    },
-    {
-        zh: '金星',
-        en: 'venus'
-    },
-    {
-        zh: '地球',
-        en: 'earth'
-    },
-    {
-        zh: '火星',
-        en: 'mars'
-    },
-    {
-        zh: '木星',
-        en: 'jupiter'
-    },
-    {
-        zh: '土星',
-        en: 'saturn'
-    },
-    {
-        zh: '天王星',
-        en: 'uranus'
-    },
-    {
-        zh: '海王星',
-        en: 'neptune'
-    },
-    {
-        zh: '冥王星',
-        en: 'pluto'
-    },
-    {
-        zh: '月球',
-        en: 'moon'
-    }
-];
+
 
 export default class App extends React.Component {
     constructor(props) {
@@ -82,6 +43,8 @@ export default class App extends React.Component {
 
             //介绍面板
             intro: false,
+
+            introduction: {contents:[]}
         }
     }
 
@@ -119,7 +82,26 @@ export default class App extends React.Component {
 
     handleDisplayIntroduction = (index) => {
         this.setState({intro: true});
-        console.log(stars[index]);
+        if(index === -1) {
+            this.setState({
+                introduction: {
+                    title: '太阳',
+                    contents: [
+                        {key: '直径(公里)', value: '1,392,000'},
+                        {key: '重量(地球=1)', value:'330,000'},
+                        {key: '自转周期(日)', value:24.47},
+                        {key: '表面温度(度)', value:5505},
+                        {key: '自转方向', value:'自西向东'},
+                        {key: '绝对星等', value:'+4.83等'}
+                    ]
+                }
+            })
+        }
+        else {
+            this.setState({
+                introduction: Constants.introduction[index]
+            })
+        }
     };
 
     handleCloseIntroduction = () => {
@@ -145,7 +127,7 @@ export default class App extends React.Component {
                                         <div className="controls__subtitle" onClick={()=>this.handleExpandPanel(0)}>转动</div>
                                     </Paper>
                                     <div className="controls__content" style={{height: this.state.expanded[0] ? 330 : 0}}>
-                                        {stars.map((item, index)=>(
+                                        {Constants.stars.map((item, index)=>(
                                             <div key={index} className="controls__content__row">
                                                 <div>{item.zh}</div>
                                                 <div>
@@ -179,7 +161,7 @@ export default class App extends React.Component {
                                                 label="上帝视角"
                                                 style={radio_button_style}
                                             />
-                                            {stars.map((item, index) => (
+                                            {Constants.stars.map((item, index) => (
                                                 <RadioButton
                                                     key={index}
                                                     value={item.en}
@@ -195,7 +177,7 @@ export default class App extends React.Component {
                         <div className={`introduction ${this.state.intro ? 'bounceInRight animated' : 'bounceOutRight animated'}`}>
                             <Paper zDepth={2}>
                                 <div className="introduction__title">
-                                    <div className="introduction__title__text">太阳</div>
+                                    <div className="introduction__title__text">{this.state.introduction.title}</div>
                                     <IconButton tooltip="关闭" className="introduction__title__btn"
                                                 onTouchTap={this.handleCloseIntroduction}>
                                         <NavigationClose />
@@ -211,10 +193,12 @@ export default class App extends React.Component {
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody displayRowCheckbox={false}>
-                                        <TableRow>
-                                            <TableRowColumn>1</TableRowColumn>
-                                            <TableRowColumn>John Smith</TableRowColumn>
-                                        </TableRow>
+                                        {this.state.introduction.contents.map((item, index) => (
+                                            <TableRow key={index}>
+                                                <TableRowColumn>{item.key}</TableRowColumn>
+                                                <TableRowColumn>{item.value}</TableRowColumn>
+                                            </TableRow>
+                                        ))}
                                     </TableBody>
                                 </Table>
                             </div>

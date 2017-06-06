@@ -66,7 +66,7 @@ export default class Jupiter extends React.Component {
                         heightSegments: 32 // Number
                     }}
                     material={new THREE.MeshStandardMaterial({
-                        map: THREE.ImageUtils.loadTexture(TEXTURE_JUPITER),
+                        map: new THREE.TextureLoader().load(TEXTURE_JUPITER),
                         roughness: 0.8
                     })}
                     position={[Constants.JUPITER.orbit_radius, 0, 0]}

@@ -65,7 +65,7 @@ export default class Uranus extends React.Component {
                         heightSegments: 32 // Number
                     }}
                     material={new THREE.MeshStandardMaterial({
-                        map: THREE.ImageUtils.loadTexture(TEXTURE_URANUS),
+                        map: new THREE.TextureLoader().load(TEXTURE_URANUS),
                         roughness: 0.8
                     })}
                     position={[Constants.URANUS.orbit_radius, 0, 0]}

@@ -65,7 +65,7 @@ export default class Venus extends React.Component {
                         heightSegments: 32 // Number
                     }}
                     material={new THREE.MeshStandardMaterial({
-                        map: THREE.ImageUtils.loadTexture(TEXTURE_VENUS),
+                        map: new THREE.TextureLoader().load(TEXTURE_VENUS),
                         roughness: 0.8
                     })}
                     position={[Constants.VENUS.orbit_radius, 0, 0]}

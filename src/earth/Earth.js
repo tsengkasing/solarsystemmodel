@@ -31,7 +31,7 @@ export default class Earth extends React.Component {
             },
 
             material: new THREE.MeshStandardMaterial({
-                map: THREE.ImageUtils.loadTexture(TEXTURE_MOON),
+                map: new THREE.TextureLoader().load(TEXTURE_MOON),
                 roughness: 0.8,
             })
         });
@@ -77,13 +77,17 @@ export default class Earth extends React.Component {
         }
 
         if(this.props.loopOfMoon.rotation) {
+            // eslint-disable-next-line
             this.state.moon.rotation.y -= Constants.ROTATION_SCALE / Constants.MOON.period * 10;
         }
 
         if(this.props.loopOfMoon.revolution) {
+            // eslint-disable-next-line
             this.state.moon.data.angle -= 0.02;
 
+            // eslint-disable-next-line
             this.state.moon.position.x = Math.cos(this.state.moon.data.angle) * this.state.moon.data.distance + this.state.earth.position.x;
+            // eslint-disable-next-line
             this.state.moon.position.z = Math.sin(this.state.moon.data.angle) * this.state.moon.data.distance + this.state.earth.position.z;
         }
     });
@@ -91,6 +95,7 @@ export default class Earth extends React.Component {
     componentDidMount() {
         // eslint-disable-next-line
         this.addMoon();
+        // eslint-disable-next-line
         this.state.group.rotation.z = Constants.EARTH.inclination;
         this.state.group.addTo(this.props.parent);
         this.props.parent.addLoop(this.loop);
@@ -114,7 +119,7 @@ export default class Earth extends React.Component {
                         heightSegments: 32 // Number
                     }}
                     material={new THREE.MeshStandardMaterial({
-                        map: THREE.ImageUtils.loadTexture(TEXTURE_EARTH),
+                        map: new THREE.TextureLoader().load(TEXTURE_EARTH),
                         roughness: 0.8,
                     })}
                     position={[Constants.EARTH.orbit_radius, 0, 0]}

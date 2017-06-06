@@ -1,5 +1,5 @@
 import React from 'react';
-import {App, Sphere, AmbientLight, DirectionalLight} from 'react-whs';
+import {App, Sphere, DirectionalLight} from 'react-whs';
 import * as WHS from 'whs';
 import * as THREE from 'three';
 
@@ -61,19 +61,6 @@ const WIDTH = window.innerWidth,
 
 let stars = [];
 
-
-function getMat(color){
-    // our material is a phong material, with no shininess (highlight) and a black specular
-    return new THREE.MeshStandardMaterial({
-        color:color,
-        roughness:.9,
-        transparent: true,
-        opacity: 0,
-        emissive:0x270000,
-        shading:THREE.FlatShading
-    });
-}
-
 class World extends React.Component {
 
     constructor(props) {
@@ -126,6 +113,17 @@ class World extends React.Component {
 
     updateCamera = () => {
         if(this.props.view === 'overall') { return; }
+        else if(this.props.view === 'moon') {
+            let {x, y, z} = this.refs['earth'].state['moon'].position;
+            // eslint-disable-next-line
+            this.state.view.camera.position = {x: x, y: y, z: z};
+            //自转角度
+            // this.angle += Math.PI / 180;
+            // eslint-disable-next-line
+            // this.state.view.camera._native.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), this.angle);
+            return;
+        }
+
 
         let {x, y, z} = this.refs[this.props.view].state[this.props.view].position;
         // eslint-disable-next-line
@@ -142,7 +140,7 @@ class World extends React.Component {
     //=========================================================================================================
     //背景的星空
     addStars = () => {
-        for ( let z= -2000; z < 2000; z+=20 ) {
+        for ( let z= -1000; z < 1000; z+=20 ) {
 
             let geometry   = new THREE.SphereGeometry(0.5, 32, 32);
             let material = new THREE.MeshBasicMaterial( {color: 0xffffff} );
@@ -227,13 +225,13 @@ class World extends React.Component {
             uranus: true,
             neptune: true,
             pluto: true,
+        }, () => {
+            this.setUpMouseListener();
         });
 
         new THREE.FontLoader().load('fonts/yeliqunjiheqiebianticu_Regular.json', font => {
             this.addStarNames(font);
         });
-
-        this.setUpMouseListener();
 
         this.setUpKeyListener();
 
@@ -275,12 +273,23 @@ class World extends React.Component {
 
     setUpMouseListener = () => {
         this.state.sun.on('mouseover', () => {
-            // this.state.sun.material.color.set(0xffff00);
-            console.log('mouseover sun');
-            this.props.intro(0);
+            this.props.intro(-1);
+        });
+        mouse.track(this.state.sun);
+
+        ['mercury', 'venus', 'earth', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'pluto'].forEach((planet, index) => {
+            const _planet = this.refs[planet].state[planet];
+            _planet.on('mouseover', () => {
+                this.props.intro(index);
+            });
+            mouse.track(_planet);
         });
 
-        mouse.track(this.state.sun);
+        const moon = this.refs['earth'].state['moon'];
+        moon.on('mouseover', () => {
+            this.props.intro(9);
+        });
+        mouse.track(moon);
     };
 
     setUpKeyListener = () => {
@@ -297,7 +306,6 @@ class World extends React.Component {
     };
 
     render() {
-        // const view = new WHS.Sphere({modules: [new PHYSICS.SphereModule()]});
         return (
             <App modules={[
                     new WHS.app.ElementModule(),
@@ -364,7 +372,7 @@ class World extends React.Component {
                         heightSegments: 64 // Number
                     }}
                     material={new THREE.MeshStandardMaterial({
-                        map: THREE.ImageUtils.loadTexture(TEXTURE_SUN),
+                        map: new THREE.TextureLoader().load(TEXTURE_SUN),
                         emissive: 0xff0000
                         // map: THREE.TextureLoader(TEXTURE_SUN)
                         // color: Constants.SUN.color,
